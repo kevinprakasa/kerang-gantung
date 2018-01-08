@@ -24,7 +24,7 @@ load_dotenv(find_dotenv())
 
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.environ.get('CHANNEL_SECRET'))
-client = Wit(os.environ.get('WIT_ACCESS_TOKEN'))
+# client = Wit(os.environ.get('WIT_ACCESS_TOKEN'))
 
 @app.route('/callback', methods=['POST'])
 def callback():
@@ -43,20 +43,22 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-	resp = client.message(event.message.text)
-	if (resp.get('entities').get('greeting', None) != None):
-		resp = resp.get('entities').get('greeting')[0]
-		if (resp.get('value') == 'hai') :
-			line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage(text='Hai! Semoga hari mu menyenangkan')
-				)
-		elif (resp.get('value') == 'halo'):
-			line_bot_api.reply_message(
-				event.reply_token,
-				TextSendMessage(text='Halo juga ! Semangat buat hari ini :)')
-				)
-	# reply_message = TextSendMessage(text=event.message.text)
+	# resp = client.message(event.message.text)
+	# if (resp.get('entities').get('greeting', None) != None):
+	# 	resp = resp.get('entities').get('greeting')[0]
+	# 	if (resp.get('value') == 'hai') :
+	# 		line_bot_api.reply_message(
+	# 			event.reply_token,
+	# 			TextSendMessage(text='Hai! Semoga hari mu menyenangkan')
+	# 			)
+	# 	elif (resp.get('value') == 'halo'):
+	# 		line_bot_api.reply_message(
+	# 			event.reply_token,
+	# 			TextSendMessage(text='Halo juga ! Semangat buat hari ini :)')
+	# 			)
+	reply_message = TextSendMessage(text=event.message.text)
+	if (event.message.text == "/mulai"):
+		reply_message = TextSendMessage(text="Kerang Gantung akan segera dimulai! Yang belum add aku, di add dulu yah supaya bisa ikutan main :* ")
 	# if (event.message.text == "/who am i"):
 	# 	profile = line_bot_api.get_profile(event.source.user_id)
 	# 	reply_message = TextMessage(text='Name: {}\nUser ID: {}\nPicture URL: {}\nStatus: {}'.format(profile.display_name,profile.user_id,profile.picture_url,profile.status_message))
@@ -108,7 +110,7 @@ def handle_message(event):
 	#  	reply_message = TextSendMessage(text='Product 2 added')
 	# else:
 	#  	reply_message = TextSendMessage(text='Type /list for view our products')
-	# line_bot_api.reply_message(event.reply_token,reply_message)
+	line_bot_api.reply_message(event.reply_token,reply_message)
 
 if __name__ == "__main__":
 	app.run()
